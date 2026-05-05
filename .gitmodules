@@ -1,0 +1,3 @@
+[submodule "coxed"]
+	path = coxed
+	url = https://github.com/jkropko/coxed.git
