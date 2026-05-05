@@ -1,0 +1,7 @@
+"","AIInterface","ConcordanceType","HasAI_consec","SimulatedAIHighQuality_consec","odds_ratio","ci_low","ci_high","p.value.adj"
+"1","Recommended Treatment","Mentioned","TRUE - FALSE","True - False",0.519811156510027,0.0582907318763873,4.63544769012837,1
+"2","Recommended Treatment","Adjacent","TRUE - FALSE","True - False",0.150577552057501,0.0656501179767468,0.345370273236377,4.69227360212528e-05
+"3","Options to Consider","Mentioned","TRUE - FALSE","True - False",0.297600014678789,0.0626177910858968,1.41438666552968,0.452964244390852
+"4","Options to Consider","Adjacent","TRUE - FALSE","True - False",0.555679670125477,0.268560038799546,1.14976113784833,0.452964244390852
+"5","Options to Avoid","Mentioned","TRUE - FALSE","True - False",4.69838410077614,1.08838045418027,20.2822579858363,0.190647522559065
+"6","Options to Avoid","Adjacent","TRUE - FALSE","True - False",0.823580636796462,0.370812330040104,1.82918692383478,1

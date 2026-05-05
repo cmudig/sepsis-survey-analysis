@@ -1,0 +1,265 @@
+AIInterface,Case,decision_num,ConcordanceType
+Recommended Treatment,Deborah,1,Mentioned
+Recommended Treatment,Deborah,2,Adjacent
+Recommended Treatment,Deborah,3,None
+Recommended Treatment,Deborah,4,Adjacent
+Recommended Treatment,Deborah,5,None
+Recommended Treatment,Deborah,6,None
+Recommended Treatment,Deborah,7,None
+Recommended Treatment,Deborah,8,None
+Recommended Treatment,Deborah,9,None
+Recommended Treatment,Deborah,10,Adjacent
+Recommended Treatment,Deborah,11,None
+Recommended Treatment,Deborah,12,None
+Recommended Treatment,Deborah,13,None
+Recommended Treatment,Deborah,14,None
+Recommended Treatment,Deborah,15,None
+Recommended Treatment,Deborah,16,None
+Recommended Treatment,Heather,1,Mentioned
+Recommended Treatment,Heather,2,Adjacent
+Recommended Treatment,Heather,3,None
+Recommended Treatment,Heather,4,Adjacent
+Recommended Treatment,Heather,5,None
+Recommended Treatment,Heather,6,None
+Recommended Treatment,Heather,7,None
+Recommended Treatment,Heather,8,None
+Recommended Treatment,Heather,9,None
+Recommended Treatment,Heather,10,Adjacent
+Recommended Treatment,Heather,11,None
+Recommended Treatment,Heather,12,None
+Recommended Treatment,Heather,13,None
+Recommended Treatment,Heather,14,None
+Recommended Treatment,Esther,1,Adjacent
+Recommended Treatment,Esther,2,None
+Recommended Treatment,Esther,3,None
+Recommended Treatment,Esther,4,None
+Recommended Treatment,Esther,5,None
+Recommended Treatment,Esther,6,None
+Recommended Treatment,Esther,7,None
+Recommended Treatment,Esther,8,None
+Recommended Treatment,Esther,9,None
+Recommended Treatment,Esther,10,Mentioned
+Recommended Treatment,Esther,11,Adjacent
+Recommended Treatment,Esther,12,None
+Recommended Treatment,Esther,13,None
+Recommended Treatment,Esther,14,None
+Recommended Treatment,Richard,1,None
+Recommended Treatment,Richard,2,Adjacent
+Recommended Treatment,Richard,3,None
+Recommended Treatment,Richard,4,None
+Recommended Treatment,Richard,5,None
+Recommended Treatment,Richard,6,None
+Recommended Treatment,Richard,7,None
+Recommended Treatment,Richard,8,None
+Recommended Treatment,Richard,9,None
+Recommended Treatment,Richard,10,Adjacent
+Recommended Treatment,Richard,11,Mentioned
+Recommended Treatment,Richard,12,Adjacent
+Recommended Treatment,Richard,13,None
+Recommended Treatment,Richard,14,None
+Recommended Treatment,Richard,15,None
+Recommended Treatment,Richard,16,None
+Recommended Treatment,Margaret,1,None
+Recommended Treatment,Margaret,2,None
+Recommended Treatment,Margaret,3,None
+Recommended Treatment,Margaret,4,Adjacent
+Recommended Treatment,Margaret,5,None
+Recommended Treatment,Margaret,6,None
+Recommended Treatment,Margaret,7,Mentioned
+Recommended Treatment,Margaret,8,None
+Recommended Treatment,Margaret,9,None
+Recommended Treatment,Margaret,10,None
+Recommended Treatment,Margaret,11,None
+Recommended Treatment,Margaret,12,None
+Recommended Treatment,Margaret,13,None
+Recommended Treatment,Margaret,14,Adjacent
+Recommended Treatment,Mike,1,Adjacent
+Recommended Treatment,Mike,2,Mentioned
+Recommended Treatment,Mike,3,Adjacent
+Recommended Treatment,Mike,4,None
+Recommended Treatment,Mike,5,Adjacent
+Recommended Treatment,Mike,6,None
+Recommended Treatment,Mike,7,None
+Recommended Treatment,Mike,8,None
+Recommended Treatment,Mike,9,None
+Recommended Treatment,Mike,10,None
+Recommended Treatment,Mike,11,Adjacent
+Recommended Treatment,Mike,12,None
+Recommended Treatment,Mike,13,None
+Recommended Treatment,Mike,14,None
+Options to Consider,Deborah,1,Mentioned
+Options to Consider,Deborah,2,Adjacent
+Options to Consider,Deborah,3,None
+Options to Consider,Deborah,4,Adjacent
+Options to Consider,Deborah,5,Mentioned
+Options to Consider,Deborah,6,None
+Options to Consider,Deborah,7,None
+Options to Consider,Deborah,8,Adjacent
+Options to Consider,Deborah,9,None
+Options to Consider,Deborah,10,Mentioned
+Options to Consider,Deborah,11,Adjacent
+Options to Consider,Deborah,12,None
+Options to Consider,Deborah,13,Adjacent
+Options to Consider,Deborah,14,Adjacent
+Options to Consider,Deborah,15,None
+Options to Consider,Deborah,16,None
+Options to Consider,Heather,1,Mentioned
+Options to Consider,Heather,2,Adjacent
+Options to Consider,Heather,3,Adjacent
+Options to Consider,Heather,4,Adjacent
+Options to Consider,Heather,5,Mentioned
+Options to Consider,Heather,6,Mentioned
+Options to Consider,Heather,7,None
+Options to Consider,Heather,8,Adjacent
+Options to Consider,Heather,9,Adjacent
+Options to Consider,Heather,10,Adjacent
+Options to Consider,Heather,11,None
+Options to Consider,Heather,12,None
+Options to Consider,Heather,13,Adjacent
+Options to Consider,Heather,14,None
+Options to Consider,Esther,1,Adjacent
+Options to Consider,Esther,2,None
+Options to Consider,Esther,3,None
+Options to Consider,Esther,4,Mentioned
+Options to Consider,Esther,5,None
+Options to Consider,Esther,6,None
+Options to Consider,Esther,7,Adjacent
+Options to Consider,Esther,8,None
+Options to Consider,Esther,9,None
+Options to Consider,Esther,10,Mentioned
+Options to Consider,Esther,11,Adjacent
+Options to Consider,Esther,12,None
+Options to Consider,Esther,13,Adjacent
+Options to Consider,Esther,14,None
+Options to Consider,Richard,1,Adjacent
+Options to Consider,Richard,2,Adjacent
+Options to Consider,Richard,3,Adjacent
+Options to Consider,Richard,4,None
+Options to Consider,Richard,5,None
+Options to Consider,Richard,6,None
+Options to Consider,Richard,7,None
+Options to Consider,Richard,8,None
+Options to Consider,Richard,9,None
+Options to Consider,Richard,10,Mentioned
+Options to Consider,Richard,11,Mentioned
+Options to Consider,Richard,12,Mentioned
+Options to Consider,Richard,13,None
+Options to Consider,Richard,14,None
+Options to Consider,Richard,15,None
+Options to Consider,Richard,16,None
+Options to Consider,Margaret,1,Adjacent
+Options to Consider,Margaret,2,None
+Options to Consider,Margaret,3,None
+Options to Consider,Margaret,4,Adjacent
+Options to Consider,Margaret,5,None
+Options to Consider,Margaret,6,None
+Options to Consider,Margaret,7,Mentioned
+Options to Consider,Margaret,8,None
+Options to Consider,Margaret,9,None
+Options to Consider,Margaret,10,Mentioned
+Options to Consider,Margaret,11,Adjacent
+Options to Consider,Margaret,12,None
+Options to Consider,Margaret,13,None
+Options to Consider,Margaret,14,Adjacent
+Options to Consider,Mike,1,Adjacent
+Options to Consider,Mike,2,Mentioned
+Options to Consider,Mike,3,Adjacent
+Options to Consider,Mike,4,None
+Options to Consider,Mike,5,Adjacent
+Options to Consider,Mike,6,None
+Options to Consider,Mike,7,None
+Options to Consider,Mike,8,None
+Options to Consider,Mike,9,None
+Options to Consider,Mike,10,Mentioned
+Options to Consider,Mike,11,Mentioned
+Options to Consider,Mike,12,Adjacent
+Options to Consider,Mike,13,None
+Options to Consider,Mike,14,None
+Options to Avoid,Deborah,1,None
+Options to Avoid,Deborah,2,Adjacent
+Options to Avoid,Deborah,3,Adjacent
+Options to Avoid,Deborah,4,None
+Options to Avoid,Deborah,5,None
+Options to Avoid,Deborah,6,Mentioned
+Options to Avoid,Deborah,7,None
+Options to Avoid,Deborah,8,None
+Options to Avoid,Deborah,9,Adjacent
+Options to Avoid,Deborah,10,Adjacent
+Options to Avoid,Deborah,11,Mentioned
+Options to Avoid,Deborah,12,Adjacent
+Options to Avoid,Deborah,13,None
+Options to Avoid,Deborah,14,Adjacent
+Options to Avoid,Deborah,15,None
+Options to Avoid,Deborah,16,None
+Options to Avoid,Heather,1,Adjacent
+Options to Avoid,Heather,2,Adjacent
+Options to Avoid,Heather,3,Mentioned
+Options to Avoid,Heather,4,Mentioned
+Options to Avoid,Heather,5,None
+Options to Avoid,Heather,6,Adjacent
+Options to Avoid,Heather,7,Adjacent
+Options to Avoid,Heather,8,None
+Options to Avoid,Heather,9,None
+Options to Avoid,Heather,10,None
+Options to Avoid,Heather,11,Adjacent
+Options to Avoid,Heather,12,Mentioned
+Options to Avoid,Heather,13,Adjacent
+Options to Avoid,Heather,14,None
+Options to Avoid,Esther,1,Mentioned
+Options to Avoid,Esther,2,Adjacent
+Options to Avoid,Esther,3,None
+Options to Avoid,Esther,4,Adjacent
+Options to Avoid,Esther,5,None
+Options to Avoid,Esther,6,None
+Options to Avoid,Esther,7,None
+Options to Avoid,Esther,8,None
+Options to Avoid,Esther,9,None
+Options to Avoid,Esther,10,Adjacent
+Options to Avoid,Esther,11,None
+Options to Avoid,Esther,12,None
+Options to Avoid,Esther,13,None
+Options to Avoid,Esther,14,None
+Options to Avoid,Richard,1,Mentioned
+Options to Avoid,Richard,2,Adjacent
+Options to Avoid,Richard,3,Adjacent
+Options to Avoid,Richard,4,Adjacent
+Options to Avoid,Richard,5,Mentioned
+Options to Avoid,Richard,6,Mentioned
+Options to Avoid,Richard,7,None
+Options to Avoid,Richard,8,Adjacent
+Options to Avoid,Richard,9,Adjacent
+Options to Avoid,Richard,10,Adjacent
+Options to Avoid,Richard,11,None
+Options to Avoid,Richard,12,None
+Options to Avoid,Richard,13,Adjacent
+Options to Avoid,Richard,14,Adjacent
+Options to Avoid,Richard,15,None
+Options to Avoid,Richard,16,None
+Options to Avoid,Margaret,1,Mentioned
+Options to Avoid,Margaret,2,Adjacent
+Options to Avoid,Margaret,3,None
+Options to Avoid,Margaret,4,Mentioned
+Options to Avoid,Margaret,5,None
+Options to Avoid,Margaret,6,None
+Options to Avoid,Margaret,7,Adjacent
+Options to Avoid,Margaret,8,None
+Options to Avoid,Margaret,9,None
+Options to Avoid,Margaret,10,Adjacent
+Options to Avoid,Margaret,11,None
+Options to Avoid,Margaret,12,None
+Options to Avoid,Margaret,13,Adjacent
+Options to Avoid,Margaret,14,None
+Options to Avoid,Mike,1,Mentioned
+Options to Avoid,Mike,2,Adjacent
+Options to Avoid,Mike,3,Adjacent
+Options to Avoid,Mike,4,Adjacent
+Options to Avoid,Mike,5,Mentioned
+Options to Avoid,Mike,6,Mentioned
+Options to Avoid,Mike,7,None
+Options to Avoid,Mike,8,Adjacent
+Options to Avoid,Mike,9,Adjacent
+Options to Avoid,Mike,10,Adjacent
+Options to Avoid,Mike,11,None
+Options to Avoid,Mike,12,None
+Options to Avoid,Mike,13,Adjacent
+Options to Avoid,Mike,14,None

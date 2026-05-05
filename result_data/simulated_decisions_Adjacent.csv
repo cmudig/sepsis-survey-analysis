@@ -1,0 +1,301 @@
+"","bootstrap","AIInterface","HumanAI","prob","Uniform"
+"1","1","Options to Avoid","Simulated",0.1875,TRUE
+"2","1","Options to Consider","Simulated",0.176470588235294,TRUE
+"3","1","Recommended Treatment","Simulated",0.349206349206349,TRUE
+"4","2","Options to Avoid","Simulated",0.1,TRUE
+"5","2","Options to Consider","Simulated",0.178571428571429,TRUE
+"6","2","Recommended Treatment","Simulated",0.34765625,TRUE
+"7","3","Options to Avoid","Simulated",0.11340206185567,TRUE
+"8","3","Options to Consider","Simulated",0.192708333333333,TRUE
+"9","3","Recommended Treatment","Simulated",0.317164179104478,TRUE
+"10","4","Options to Avoid","Simulated",0.0842105263157895,TRUE
+"11","4","Options to Consider","Simulated",0.179166666666667,TRUE
+"12","4","Recommended Treatment","Simulated",0.35377358490566,TRUE
+"13","5","Options to Avoid","Simulated",0.162790697674419,TRUE
+"14","5","Options to Consider","Simulated",0.213483146067416,TRUE
+"15","5","Recommended Treatment","Simulated",0.344339622641509,TRUE
+"16","6","Options to Avoid","Simulated",0.168831168831169,TRUE
+"17","6","Options to Consider","Simulated",0.208835341365462,TRUE
+"18","6","Recommended Treatment","Simulated",0.308823529411765,TRUE
+"19","7","Options to Avoid","Simulated",0.181818181818182,TRUE
+"20","7","Options to Consider","Simulated",0.185606060606061,TRUE
+"21","7","Recommended Treatment","Simulated",0.329365079365079,TRUE
+"22","8","Options to Avoid","Simulated",0.180722891566265,TRUE
+"23","8","Options to Consider","Simulated",0.236111111111111,TRUE
+"24","8","Recommended Treatment","Simulated",0.373287671232877,TRUE
+"25","9","Options to Avoid","Simulated",0.126582278481013,TRUE
+"26","9","Options to Consider","Simulated",0.191666666666667,TRUE
+"27","9","Recommended Treatment","Simulated",0.304347826086957,TRUE
+"28","10","Options to Avoid","Simulated",0.0875,TRUE
+"29","10","Options to Consider","Simulated",0.210045662100457,TRUE
+"30","10","Recommended Treatment","Simulated",0.35,TRUE
+"31","11","Options to Avoid","Simulated",0.121212121212121,TRUE
+"32","11","Options to Consider","Simulated",0.19672131147541,TRUE
+"33","11","Recommended Treatment","Simulated",0.319852941176471,TRUE
+"34","12","Options to Avoid","Simulated",0.153846153846154,TRUE
+"35","12","Options to Consider","Simulated",0.208888888888889,TRUE
+"36","12","Recommended Treatment","Simulated",0.346666666666667,TRUE
+"37","13","Options to Avoid","Simulated",0.17283950617284,TRUE
+"38","13","Options to Consider","Simulated",0.252136752136752,TRUE
+"39","13","Recommended Treatment","Simulated",0.333333333333333,TRUE
+"40","14","Options to Avoid","Simulated",0.12987012987013,TRUE
+"41","14","Options to Consider","Simulated",0.212121212121212,TRUE
+"42","14","Recommended Treatment","Simulated",0.327702702702703,TRUE
+"43","15","Options to Avoid","Simulated",0.197674418604651,TRUE
+"44","15","Options to Consider","Simulated",0.195121951219512,TRUE
+"45","15","Recommended Treatment","Simulated",0.3125,TRUE
+"46","16","Options to Avoid","Simulated",0.0657894736842105,TRUE
+"47","16","Options to Consider","Simulated",0.19831223628692,TRUE
+"48","16","Recommended Treatment","Simulated",0.339041095890411,TRUE
+"49","17","Options to Avoid","Simulated",0.152777777777778,TRUE
+"50","17","Options to Consider","Simulated",0.200757575757576,TRUE
+"51","17","Recommended Treatment","Simulated",0.327205882352941,TRUE
+"52","18","Options to Avoid","Simulated",0.153846153846154,TRUE
+"53","18","Options to Consider","Simulated",0.210970464135021,TRUE
+"54","18","Recommended Treatment","Simulated",0.341549295774648,TRUE
+"55","19","Options to Avoid","Simulated",0.212121212121212,TRUE
+"56","19","Options to Consider","Simulated",0.261904761904762,TRUE
+"57","19","Recommended Treatment","Simulated",0.333333333333333,TRUE
+"58","20","Options to Avoid","Simulated",0.166666666666667,TRUE
+"59","20","Options to Consider","Simulated",0.266666666666667,TRUE
+"60","20","Recommended Treatment","Simulated",0.359375,TRUE
+"61","21","Options to Avoid","Simulated",0.154929577464789,TRUE
+"62","21","Options to Consider","Simulated",0.19047619047619,TRUE
+"63","21","Recommended Treatment","Simulated",0.308219178082192,TRUE
+"64","22","Options to Avoid","Simulated",0.0657894736842105,TRUE
+"65","22","Options to Consider","Simulated",0.184397163120567,TRUE
+"66","22","Recommended Treatment","Simulated",0.310344827586207,TRUE
+"67","23","Options to Avoid","Simulated",0.0641025641025641,TRUE
+"68","23","Options to Consider","Simulated",0.150793650793651,TRUE
+"69","23","Recommended Treatment","Simulated",0.321969696969697,TRUE
+"70","24","Options to Avoid","Simulated",0.168539325842697,TRUE
+"71","24","Options to Consider","Simulated",0.192982456140351,TRUE
+"72","24","Recommended Treatment","Simulated",0.349206349206349,TRUE
+"73","25","Options to Avoid","Simulated",0.164556962025316,TRUE
+"74","25","Options to Consider","Simulated",0.195121951219512,TRUE
+"75","25","Recommended Treatment","Simulated",0.324626865671642,TRUE
+"76","26","Options to Avoid","Simulated",0.151162790697674,TRUE
+"77","26","Options to Consider","Simulated",0.246753246753247,TRUE
+"78","26","Recommended Treatment","Simulated",0.315384615384615,TRUE
+"79","27","Options to Avoid","Simulated",0.131868131868132,TRUE
+"80","27","Options to Consider","Simulated",0.241545893719807,TRUE
+"81","27","Recommended Treatment","Simulated",0.375,TRUE
+"82","28","Options to Avoid","Simulated",0.202702702702703,TRUE
+"83","28","Options to Consider","Simulated",0.239700374531835,TRUE
+"84","28","Recommended Treatment","Simulated",0.353846153846154,TRUE
+"85","29","Options to Avoid","Simulated",0.1625,TRUE
+"86","29","Options to Consider","Simulated",0.20253164556962,TRUE
+"87","29","Recommended Treatment","Simulated",0.376811594202899,TRUE
+"88","30","Options to Avoid","Simulated",0.129032258064516,TRUE
+"89","30","Options to Consider","Simulated",0.219607843137255,TRUE
+"90","30","Recommended Treatment","Simulated",0.324074074074074,TRUE
+"91","31","Options to Avoid","Simulated",0.157142857142857,TRUE
+"92","31","Options to Consider","Simulated",0.235772357723577,TRUE
+"93","31","Recommended Treatment","Simulated",0.335526315789474,TRUE
+"94","32","Options to Avoid","Simulated",0.186666666666667,TRUE
+"95","32","Options to Consider","Simulated",0.235294117647059,TRUE
+"96","32","Recommended Treatment","Simulated",0.305882352941176,TRUE
+"97","33","Options to Avoid","Simulated",0.121951219512195,TRUE
+"98","33","Options to Consider","Simulated",0.270833333333333,TRUE
+"99","33","Recommended Treatment","Simulated",0.378787878787879,TRUE
+"100","34","Options to Avoid","Simulated",0.121621621621622,TRUE
+"101","34","Options to Consider","Simulated",0.205761316872428,TRUE
+"102","34","Recommended Treatment","Simulated",0.311643835616438,TRUE
+"103","35","Options to Avoid","Simulated",0.121951219512195,TRUE
+"104","35","Options to Consider","Simulated",0.19047619047619,TRUE
+"105","35","Recommended Treatment","Simulated",0.36231884057971,TRUE
+"106","36","Options to Avoid","Simulated",0.0675675675675676,TRUE
+"107","36","Options to Consider","Simulated",0.197674418604651,TRUE
+"108","36","Recommended Treatment","Simulated",0.360294117647059,TRUE
+"109","37","Options to Avoid","Simulated",0.159420289855072,TRUE
+"110","37","Options to Consider","Simulated",0.23758865248227,TRUE
+"111","37","Recommended Treatment","Simulated",0.342307692307692,TRUE
+"112","38","Options to Avoid","Simulated",0.168831168831169,TRUE
+"113","38","Options to Consider","Simulated",0.166666666666667,TRUE
+"114","38","Recommended Treatment","Simulated",0.328358208955224,TRUE
+"115","39","Options to Avoid","Simulated",0.173333333333333,TRUE
+"116","39","Options to Consider","Simulated",0.154166666666667,TRUE
+"117","39","Recommended Treatment","Simulated",0.335616438356164,TRUE
+"118","40","Options to Avoid","Simulated",0.123287671232877,TRUE
+"119","40","Options to Consider","Simulated",0.254385964912281,TRUE
+"120","40","Recommended Treatment","Simulated",0.332278481012658,TRUE
+"121","41","Options to Avoid","Simulated",0.115384615384615,TRUE
+"122","41","Options to Consider","Simulated",0.201550387596899,TRUE
+"123","41","Recommended Treatment","Simulated",0.34375,TRUE
+"124","42","Options to Avoid","Simulated",0.115942028985507,TRUE
+"125","42","Options to Consider","Simulated",0.235507246376812,TRUE
+"126","42","Recommended Treatment","Simulated",0.332089552238806,TRUE
+"127","43","Options to Avoid","Simulated",0.223684210526316,TRUE
+"128","43","Options to Consider","Simulated",0.207407407407407,TRUE
+"129","43","Recommended Treatment","Simulated",0.354838709677419,TRUE
+"130","44","Options to Avoid","Simulated",0.118421052631579,TRUE
+"131","44","Options to Consider","Simulated",0.212962962962963,TRUE
+"132","44","Recommended Treatment","Simulated",0.340625,TRUE
+"133","45","Options to Avoid","Simulated",0.17283950617284,TRUE
+"134","45","Options to Consider","Simulated",0.176245210727969,TRUE
+"135","45","Recommended Treatment","Simulated",0.316666666666667,TRUE
+"136","46","Options to Avoid","Simulated",0.20253164556962,TRUE
+"137","46","Options to Consider","Simulated",0.235042735042735,TRUE
+"138","46","Recommended Treatment","Simulated",0.309859154929577,TRUE
+"139","47","Options to Avoid","Simulated",0.164705882352941,TRUE
+"140","47","Options to Consider","Simulated",0.233333333333333,TRUE
+"141","47","Recommended Treatment","Simulated",0.353174603174603,TRUE
+"142","48","Options to Avoid","Simulated",0.142857142857143,TRUE
+"143","48","Options to Consider","Simulated",0.19831223628692,TRUE
+"144","48","Recommended Treatment","Simulated",0.34493670886076,TRUE
+"145","49","Options to Avoid","Simulated",0.16,TRUE
+"146","49","Options to Consider","Simulated",0.232067510548523,TRUE
+"147","49","Recommended Treatment","Simulated",0.314189189189189,TRUE
+"148","50","Options to Avoid","Simulated",0.144927536231884,TRUE
+"149","50","Options to Consider","Simulated",0.185654008438819,TRUE
+"150","50","Recommended Treatment","Simulated",0.334375,TRUE
+"151","1","Options to Avoid","Simulated",0.626666666666667,FALSE
+"152","1","Options to Consider","Simulated",0.458333333333333,FALSE
+"153","1","Recommended Treatment","Simulated",0.615384615384615,FALSE
+"154","2","Options to Avoid","Simulated",0.659574468085106,FALSE
+"155","2","Options to Consider","Simulated",0.460905349794239,FALSE
+"156","2","Recommended Treatment","Simulated",0.599056603773585,FALSE
+"157","3","Options to Avoid","Simulated",0.740740740740741,FALSE
+"158","3","Options to Consider","Simulated",0.469879518072289,FALSE
+"159","3","Recommended Treatment","Simulated",0.60546875,FALSE
+"160","4","Options to Avoid","Simulated",0.529411764705882,FALSE
+"161","4","Options to Consider","Simulated",0.550200803212851,FALSE
+"162","4","Recommended Treatment","Simulated",0.595833333333333,FALSE
+"163","5","Options to Avoid","Simulated",0.6125,FALSE
+"164","5","Options to Consider","Simulated",0.524390243902439,FALSE
+"165","5","Recommended Treatment","Simulated",0.613636363636364,FALSE
+"166","6","Options to Avoid","Simulated",0.689189189189189,FALSE
+"167","6","Options to Consider","Simulated",0.553030303030303,FALSE
+"168","6","Recommended Treatment","Simulated",0.583333333333333,FALSE
+"169","7","Options to Avoid","Simulated",0.571428571428571,FALSE
+"170","7","Options to Consider","Simulated",0.506329113924051,FALSE
+"171","7","Recommended Treatment","Simulated",0.619230769230769,FALSE
+"172","8","Options to Avoid","Simulated",0.647058823529412,FALSE
+"173","8","Options to Consider","Simulated",0.577777777777778,FALSE
+"174","8","Recommended Treatment","Simulated",0.588235294117647,FALSE
+"175","9","Options to Avoid","Simulated",0.630769230769231,FALSE
+"176","9","Options to Consider","Simulated",0.440329218106996,FALSE
+"177","9","Recommended Treatment","Simulated",0.61280487804878,FALSE
+"178","10","Options to Avoid","Simulated",0.696969696969697,FALSE
+"179","10","Options to Consider","Simulated",0.516129032258065,FALSE
+"180","10","Recommended Treatment","Simulated",0.578358208955224,FALSE
+"181","11","Options to Avoid","Simulated",0.588888888888889,FALSE
+"182","11","Options to Consider","Simulated",0.563063063063063,FALSE
+"183","11","Recommended Treatment","Simulated",0.62109375,FALSE
+"184","12","Options to Avoid","Simulated",0.69047619047619,FALSE
+"185","12","Options to Consider","Simulated",0.524509803921569,FALSE
+"186","12","Recommended Treatment","Simulated",0.588815789473684,FALSE
+"187","13","Options to Avoid","Simulated",0.575,FALSE
+"188","13","Options to Consider","Simulated",0.516260162601626,FALSE
+"189","13","Recommended Treatment","Simulated",0.602272727272727,FALSE
+"190","14","Options to Avoid","Simulated",0.677777777777778,FALSE
+"191","14","Options to Consider","Simulated",0.482587064676617,FALSE
+"192","14","Recommended Treatment","Simulated",0.619718309859155,FALSE
+"193","15","Options to Avoid","Simulated",0.632183908045977,FALSE
+"194","15","Options to Consider","Simulated",0.495495495495495,FALSE
+"195","15","Recommended Treatment","Simulated",0.58955223880597,FALSE
+"196","16","Options to Avoid","Simulated",0.645569620253165,FALSE
+"197","16","Options to Consider","Simulated",0.477477477477477,FALSE
+"198","16","Recommended Treatment","Simulated",0.62,FALSE
+"199","17","Options to Avoid","Simulated",0.671232876712329,FALSE
+"200","17","Options to Consider","Simulated",0.526515151515151,FALSE
+"201","17","Recommended Treatment","Simulated",0.597014925373134,FALSE
+"202","18","Options to Avoid","Simulated",0.582089552238806,FALSE
+"203","18","Options to Consider","Simulated",0.466666666666667,FALSE
+"204","18","Recommended Treatment","Simulated",0.611842105263158,FALSE
+"205","19","Options to Avoid","Simulated",0.662162162162162,FALSE
+"206","19","Options to Consider","Simulated",0.490990990990991,FALSE
+"207","19","Recommended Treatment","Simulated",0.621875,FALSE
+"208","20","Options to Avoid","Simulated",0.676470588235294,FALSE
+"209","20","Options to Consider","Simulated",0.48062015503876,FALSE
+"210","20","Recommended Treatment","Simulated",0.618243243243243,FALSE
+"211","21","Options to Avoid","Simulated",0.703703703703704,FALSE
+"212","21","Options to Consider","Simulated",0.5,FALSE
+"213","21","Recommended Treatment","Simulated",0.603896103896104,FALSE
+"214","22","Options to Avoid","Simulated",0.632183908045977,FALSE
+"215","22","Options to Consider","Simulated",0.526315789473684,FALSE
+"216","22","Recommended Treatment","Simulated",0.596153846153846,FALSE
+"217","23","Options to Avoid","Simulated",0.597402597402597,FALSE
+"218","23","Options to Consider","Simulated",0.482456140350877,FALSE
+"219","23","Recommended Treatment","Simulated",0.6,FALSE
+"220","24","Options to Avoid","Simulated",0.614285714285714,FALSE
+"221","24","Options to Consider","Simulated",0.471861471861472,FALSE
+"222","24","Recommended Treatment","Simulated",0.608024691358025,FALSE
+"223","25","Options to Avoid","Simulated",0.574712643678161,FALSE
+"224","25","Options to Consider","Simulated",0.48,FALSE
+"225","25","Recommended Treatment","Simulated",0.583333333333333,FALSE
+"226","26","Options to Avoid","Simulated",0.63013698630137,FALSE
+"227","26","Options to Consider","Simulated",0.503875968992248,FALSE
+"228","26","Recommended Treatment","Simulated",0.590579710144927,FALSE
+"229","27","Options to Avoid","Simulated",0.552941176470588,FALSE
+"230","27","Options to Consider","Simulated",0.460526315789474,FALSE
+"231","27","Recommended Treatment","Simulated",0.608208955223881,FALSE
+"232","28","Options to Avoid","Simulated",0.650602409638554,FALSE
+"233","28","Options to Consider","Simulated",0.497835497835498,FALSE
+"234","28","Recommended Treatment","Simulated",0.599264705882353,FALSE
+"235","29","Options to Avoid","Simulated",0.5875,FALSE
+"236","29","Options to Consider","Simulated",0.498084291187739,FALSE
+"237","29","Recommended Treatment","Simulated",0.60655737704918,FALSE
+"238","30","Options to Avoid","Simulated",0.547619047619048,FALSE
+"239","30","Options to Consider","Simulated",0.557017543859649,FALSE
+"240","30","Recommended Treatment","Simulated",0.628676470588235,FALSE
+"241","31","Options to Avoid","Simulated",0.63235294117647,FALSE
+"242","31","Options to Consider","Simulated",0.529824561403509,FALSE
+"243","31","Recommended Treatment","Simulated",0.623076923076923,FALSE
+"244","32","Options to Avoid","Simulated",0.651685393258427,FALSE
+"245","32","Options to Consider","Simulated",0.536036036036036,FALSE
+"246","32","Recommended Treatment","Simulated",0.611538461538462,FALSE
+"247","33","Options to Avoid","Simulated",0.552631578947368,FALSE
+"248","33","Options to Consider","Simulated",0.477272727272727,FALSE
+"249","33","Recommended Treatment","Simulated",0.609375,FALSE
+"250","34","Options to Avoid","Simulated",0.641975308641975,FALSE
+"251","34","Options to Consider","Simulated",0.476190476190476,FALSE
+"252","34","Recommended Treatment","Simulated",0.619047619047619,FALSE
+"253","35","Options to Avoid","Simulated",0.649350649350649,FALSE
+"254","35","Options to Consider","Simulated",0.472573839662447,FALSE
+"255","35","Recommended Treatment","Simulated",0.597222222222222,FALSE
+"256","36","Options to Avoid","Simulated",0.611111111111111,FALSE
+"257","36","Options to Consider","Simulated",0.508333333333333,FALSE
+"258","36","Recommended Treatment","Simulated",0.592105263157895,FALSE
+"259","37","Options to Avoid","Simulated",0.513888888888889,FALSE
+"260","37","Options to Consider","Simulated",0.477477477477477,FALSE
+"261","37","Recommended Treatment","Simulated",0.621951219512195,FALSE
+"262","38","Options to Avoid","Simulated",0.628205128205128,FALSE
+"263","38","Options to Consider","Simulated",0.518987341772152,FALSE
+"264","38","Recommended Treatment","Simulated",0.619718309859155,FALSE
+"265","39","Options to Avoid","Simulated",0.592592592592593,FALSE
+"266","39","Options to Consider","Simulated",0.514056224899598,FALSE
+"267","39","Recommended Treatment","Simulated",0.5625,FALSE
+"268","40","Options to Avoid","Simulated",0.686046511627907,FALSE
+"269","40","Options to Consider","Simulated",0.51984126984127,FALSE
+"270","40","Recommended Treatment","Simulated",0.620689655172414,FALSE
+"271","41","Options to Avoid","Simulated",0.632183908045977,FALSE
+"272","41","Options to Consider","Simulated",0.482587064676617,FALSE
+"273","41","Recommended Treatment","Simulated",0.60472972972973,FALSE
+"274","42","Options to Avoid","Simulated",0.621951219512195,FALSE
+"275","42","Options to Consider","Simulated",0.519607843137255,FALSE
+"276","42","Recommended Treatment","Simulated",0.58974358974359,FALSE
+"277","43","Options to Avoid","Simulated",0.63953488372093,FALSE
+"278","43","Options to Consider","Simulated",0.463203463203463,FALSE
+"279","43","Recommended Treatment","Simulated",0.623076923076923,FALSE
+"280","44","Options to Avoid","Simulated",0.552631578947368,FALSE
+"281","44","Options to Consider","Simulated",0.447368421052632,FALSE
+"282","44","Recommended Treatment","Simulated",0.578947368421053,FALSE
+"283","45","Options to Avoid","Simulated",0.597826086956522,FALSE
+"284","45","Options to Consider","Simulated",0.536036036036036,FALSE
+"285","45","Recommended Treatment","Simulated",0.625,FALSE
+"286","46","Options to Avoid","Simulated",0.6625,FALSE
+"287","46","Options to Consider","Simulated",0.508130081300813,FALSE
+"288","46","Recommended Treatment","Simulated",0.617424242424242,FALSE
+"289","47","Options to Avoid","Simulated",0.693333333333333,FALSE
+"290","47","Options to Consider","Simulated",0.408730158730159,FALSE
+"291","47","Recommended Treatment","Simulated",0.619565217391304,FALSE
+"292","48","Options to Avoid","Simulated",0.641791044776119,FALSE
+"293","48","Options to Consider","Simulated",0.47463768115942,FALSE
+"294","48","Recommended Treatment","Simulated",0.601449275362319,FALSE
+"295","49","Options to Avoid","Simulated",0.582278481012658,FALSE
+"296","49","Options to Consider","Simulated",0.528735632183908,FALSE
+"297","49","Recommended Treatment","Simulated",0.588709677419355,FALSE
+"298","50","Options to Avoid","Simulated",0.580246913580247,FALSE
+"299","50","Options to Consider","Simulated",0.535864978902954,FALSE
+"300","50","Recommended Treatment","Simulated",0.650735294117647,FALSE

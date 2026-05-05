@@ -1,0 +1,693 @@
+---
+title: "260408_best_choice_analysis"
+output: html_document
+date: "2026-04-09"
+---
+
+```{r setup, include=FALSE}
+install_if_missing <- function(pkgs){
+  to_install <- pkgs[!(pkgs %in% installed.packages()[, "Package"])]
+  if(length(to_install)) install.packages(to_install)
+}
+install_if_missing(c("ordinal", "emmeans", "broom.mixed", "DHARMa", "dplyr", "ggplot2", "nnet", "tidyverse", "rms", "PermAlgo", "knitr", "mediation"))
+
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+
+library(emmeans)     # predicted probabilities and contrasts
+library(ggplot2)
+library(lme4)
+library(tidyverse)
+if (!("coxed" %in% installed.packages()[, "Package"])) install.packages("./coxed",repos=NULL, type="source")
+library(coxed)
+
+set.seed(1)
+```
+
+## Loading Data
+
+```{r load_data, include=FALSE}
+decisions <- read_csv("data/decisions_with_relative_quality_260411.csv") %>% 
+  mutate(Decision = decision_num,
+         Case = as.factor(Case),
+         ResponseId = as.factor(ResponseId)) %>%
+  dplyr::select(ResponseId, AIInterface, Case, Decision, QualityScore, MaxQuality, IsBestScore, RelativeQuality)
+responses <- read_csv("data/cleaned_respondent_level_260408.csv")
+quality <- read_csv("data/all_quality_ratings.csv") %>% 
+  mutate(QualityScore = Final) %>%
+  dplyr::select(-E1, -E2, -E3, -E4, -E5, -Final)
+quality_scores <- read_csv("data/all_quality_ratings.csv") %>% 
+  rename(QualityScore = Final) %>%
+  dplyr::select(Case, Decision, QualityScore)
+ai_concordance_types <- read_csv("data/AI_concordance_types.csv") %>%
+  rename(Decision = decision_num) %>%
+  left_join(quality_scores, by = c("Case", "Decision"))
+```
+
+```{r max_quality}
+max_quality <- quality %>%
+  group_by(Case) %>%
+  summarise(MaxQuality = max(QualityScore), MinQuality = min(QualityScore), .groups = "drop")
+
+# Add max score to quality table
+quality <- quality %>%
+  left_join(max_quality, by = "Case")
+```
+
+
+```{r}
+smoothing_factor <- 0.05
+
+cases <- unique(quality$Case)
+interfaces <- unique(decisions$AIInterface)
+
+decision_dists <- list()
+
+for (case in cases) {
+
+  # empirical distribution from No AI
+  empirical <- decisions %>%
+    filter(AIInterface == "No AI", Case == case) %>%
+    count(Decision) %>%
+    mutate(prob = n / sum(n)) %>%
+    dplyr::select(Decision, prob)
+
+  possible_decs <- quality %>%
+    filter(Case == case) %>%
+    distinct(Decision)
+
+  smoothing <- possible_decs %>%
+    mutate(prob = 1 / n())
+
+  base_dist <- full_join(
+    smoothing %>% mutate(prob = prob * smoothing_factor),
+    empirical %>% mutate(prob = prob * (1 - smoothing_factor)),
+    by = "Decision"
+  ) %>%
+    replace_na(list(prob.x = 0, prob.y = 0)) %>%
+    mutate(prob = prob.x + prob.y) %>%
+    dplyr::select(Decision, prob)
+
+  for (iface in interfaces) {
+
+    dist <- base_dist
+    
+    if (iface == "No AI") {
+      dist <- dist %>% mutate(prob = prob / sum(prob))
+      decision_dists[[paste(case, iface, sep = "|")]] <- dist
+      next
+    }
+
+    matches <- ai_concordance_types %>%
+      filter(AIInterface == iface, Case == case)
+    mentioned <- matches %>% filter(ConcordanceType == "Mentioned")
+    adjacent <- matches %>% filter(ConcordanceType == "Adjacent")
+    other <- matches %>% filter(ConcordanceType == "None")
+    non_mentioned <- matches %>% filter(ConcordanceType != "Mentioned")
+
+    ### Aligned
+    
+    if (iface == "Options to Avoid") {
+      aligned_dist <- dist %>% filter(Decision %in% non_mentioned$Decision)
+    } else {
+      aligned_dist <- dist %>% filter(Decision %in% mentioned$Decision)
+    }
+
+    decision_dists[[paste(case, iface, "Aligned", sep = "|")]] <- aligned_dist %>%
+      mutate(prob = prob / sum(prob))
+    
+    ### Mentioned
+    
+    mentioned_dist <- dist %>% filter(Decision %in% mentioned$Decision)
+    decision_dists[[paste(case, iface, "Mentioned", sep = "|")]] <- mentioned_dist %>%
+      mutate(prob = prob / sum(prob))
+    
+    ### Adjacent
+    
+    adjacent_dist <- dist %>% filter(Decision %in% adjacent$Decision)
+    decision_dists[[paste(case, iface, "Adjacent", sep = "|")]] <- adjacent_dist %>%
+      mutate(prob = prob / sum(prob))
+    
+    ### Other
+    
+    other_dist <- dist %>% filter(Decision %in% other$Decision)
+    decision_dists[[paste(case, iface, "None", sep = "|")]] <- other_dist %>%
+      mutate(prob = prob / sum(prob))
+  }
+}
+```
+
+```{r sample_decision}
+sample_decision <- function(case, iface, concordance = "Aligned", uniform = FALSE) {
+
+  if (iface == "No AI") {
+    dist <- decision_dists[[paste(case, iface, sep="|")]]
+  } else {
+    dist <- decision_dists[[paste(case, iface, concordance, sep="|")]]
+  }
+  
+  if (nrow(dist) == 1) {
+    return(as.character(dist$Decision))
+  }
+
+  if (uniform) {
+    return(as.character(sample(dist$Decision, 1)))
+  }
+  as.character(sample(dist$Decision, 1, prob = dist$prob))
+}
+```
+
+## Human-Only Model
+
+
+```{r human_data_prep}
+
+human_df <- decisions %>%
+  mutate(Case = factor(Case),
+         ResponseId = factor(ResponseId),
+         AIInterface = relevel(factor(AIInterface), ref = "No AI"))
+
+```
+
+```{r human_model}
+
+model <- glmer(
+  IsBestScore ~ AIInterface + (1 | Case) + (1 | ResponseId),
+  data = human_df,
+  family = binomial
+)
+
+print(summary(model))
+
+print("Test that all three weight coefficients are equal:")
+coef_names <- c("AIInterfaceRecommended Treatment", "AIInterfaceOptions to Consider", "AIInterfaceOptions to Avoid")
+
+# extract coefficient vector and covariance matrix for those terms
+beta_all <- fixef(model)
+vcov_all <- vcov(model)
+
+L <- rbind(
+  c(1, -1, 0),
+  c(1,  0, -1)
+)
+colnames(L) <- coef_names
+
+beta <- beta_all[coef_names]
+V <- vcov_all[coef_names, coef_names, drop = FALSE]
+
+# basic sanity checks
+if (any(is.na(beta)) || any(is.na(V))) stop("One or more names in coef_names not found in model. Check names(coef(model_cond_only)).")
+if (nrow(V) != length(beta)) stop("Covariance submatrix has wrong dimensions.")
+
+Lb <- as.numeric(L %*% beta)
+LVL <- L %*% V %*% t(L)
+
+W <- as.numeric(t(Lb) %*% solve(LVL) %*% Lb)
+df <- nrow(L)
+p_value <- 1 - pchisq(W, df)
+
+cat("Wald chi-square =", format(W, digits = 6), "on", df, "df; p =", format(p_value, digits = 6), "\n")
+
+print("Emmeans:")
+
+emm <- emmeans(model, ~ AIInterface)
+
+ctr <- emmeans::contrast(emm, method = "pairwise", adjust = "tukey")
+ctr_df <- as.data.frame(ctr)
+ctr_df$OR <- exp(ctr_df$estimate)
+ctr_df$lower.OR <- exp(ctr_df$estimate - 1.96 * ctr_df$SE)
+ctr_df$upper.OR <- exp(ctr_df$estimate + 1.96 * ctr_df$SE)
+
+# tidy output
+ctr_df <- ctr_df[, c("contrast", "estimate", "SE", "OR", "lower.OR", "upper.OR", "z.ratio", "p.value")]
+print(ctr_df)
+
+write.csv(ctr_df, "result_data/human_best_choice_ors.csv")
+```
+
+Run a model controlling for the expected quality of following the AI:
+```{r control_expected_qual}
+model <- glmer(
+  IsBestScore ~ AIInterface + RelativeQuality + (1 | Case) + (1 | ResponseId),
+  data = human_df,
+  family = binomial
+)
+
+print(summary(model))
+
+print("Emmeans:")
+
+emm <- emmeans(model, ~ AIInterface)
+
+ctr <- emmeans::contrast(emm, method = "revpairwise", adjust = "tukey")
+ctr_df <- as.data.frame(ctr)
+ctr_df$OR <- exp(ctr_df$estimate)
+ctr_df$lower.OR <- exp(ctr_df$estimate - 1.96 * ctr_df$SE)
+ctr_df$upper.OR <- exp(ctr_df$estimate + 1.96 * ctr_df$SE)
+
+# tidy output
+ctr_df <- ctr_df[, c("contrast", "estimate", "SE", "OR", "lower.OR", "upper.OR", "z.ratio", "p.value")]
+print(ctr_df)
+
+write.csv(ctr_df, "result_data/human_best_choice_ors_quality_control.csv")
+```
+
+## Run Bootstrap
+
+We'll use the bootstrap to estimate the theoretical decision quality of always following the AI and provide uncertainty estimates. Specifically we want to estimate (a) the rate of choosing the highest-scoring decision, (b) the confidence intervals around these empirical rates, and (c) whether humans perform differently than the theoretical performance.
+
+```{r bootstrap_setup}
+response_ids <- unique(decisions$ResponseId)
+cases <- unique(decisions$Case)
+interfaces <- unique(decisions$AIInterface)
+```
+
+```{r bootstrap, include=FALSE, warning=FALSE}
+bootstrapper <- function (concordance = "Aligned", B = 1000, uniform = FALSE, quality_cases = NULL) {
+  means_results <- list()
+  comparison_results <- list()
+
+  for (b in 1:B) {
+    if (b %% 100 == 0) {
+      print(b)
+    }
+    
+    # Resample clinicians
+    boot_ids <- sample(response_ids, length(response_ids), replace = TRUE)
+  
+    # -----------------------------
+    # Simulate AI-following behavior
+    # -----------------------------
+  
+    boot_responses <- tibble(ResponseId = boot_ids) %>%
+      left_join(decisions %>% dplyr::select(ResponseId, AIInterface, Case, RelativeQuality), by = "ResponseId") %>%
+      mutate(ResponseId = paste0(ResponseId, "_boot", row_number())) %>%
+      dplyr::select(ResponseId, AIInterface, Case, RelativeQuality)
+    
+    sim_data <- boot_responses
+    
+    if (!is.null(quality_cases) && quality_cases == "high") {
+      sim_data <- sim_data %>% filter(RelativeQuality >= 0)
+    } else if (!is.null(quality_cases) && quality_cases == "low") {
+      sim_data <- sim_data %>% filter(RelativeQuality < 0)
+    }
+
+    sim_data <- sim_data %>%
+      filter(AIInterface != "No AI") %>%
+      mutate(
+        Decision = map2_chr(
+          Case,
+          AIInterface,
+          ~ sample_decision(.x, .y, concordance = concordance, uniform = uniform)
+        ),
+        HumanAI = "Simulated"
+      )
+  
+    sim_data <- sim_data %>%
+      left_join(quality %>% mutate(Decision = as.character(Decision)), by = c("Case", "Decision")) %>%
+      mutate(IsBestScore = QualityScore == MaxQuality)
+  
+    # -----------------------------
+    # Prepare real decisions
+    # -----------------------------
+  
+    if (concordance == "Aligned") {
+      boot_real <- map_dfr(seq_along(boot_ids), function(i) {
+        rid <- boot_ids[i]
+      
+        decisions %>%
+          filter(ResponseId == rid) %>%
+          mutate(
+            ResponseId = paste0(rid, "_boot", i),  # ensure unique random effect level
+            HumanAI = "Human"
+          )
+      
+      })
+    
+      boot_real <- boot_real %>%
+        mutate(Decision = as.character(Decision))
+
+      # -----------------------------
+      # Combine real + simulated
+      # -----------------------------
+    
+      combined <- bind_rows(boot_real, sim_data)
+    
+    } else {
+      combined <- sim_data
+    }
+    
+    # -----------------------------
+    # Empirical means (for computing CIs)
+    # -----------------------------
+  
+    means_results[[b]] <- combined %>%
+      group_by(AIInterface, HumanAI) %>%
+      summarise(prob = mean(IsBestScore == TRUE),
+                .groups = "drop")
+    
+    # if (compare_interfaces) {
+    #   if (concordance == "Aligned") stop("Does not support comparing interfaces for Aligned")
+    #   
+    #   # Fit a logistic regression model
+    #   combined <- combined %>% 
+    #     mutate(AIInterface = relevel(as.factor(AIInterface), ref = "Recommended Treatment"),
+    #            IsBestScore = as.factor(IsBestScore))
+    #   model <- glmer(IsBestScore ~ AIInterface + (1 | ResponseId) + (1 | Case),
+    #                  data = combined,
+    #                  family = binomial)
+    #   
+    #   emm <- emmeans(model, ~ AIInterface, type = "response")
+    #   comparison_results[[b]] <- as.data.frame(pairs(emm, adjust = "none", combine = TRUE))
+    # }
+  }
+
+  bind_rows(means_results, .id = "bootstrap")  
+  # if (compare_interfaces) {
+  #   list("means" = bind_rows(means_results, .id = "bootstrap"),
+  #        "comparisons" = bind_rows(comparison_results, .id = "bootstrap"))
+  # } else {
+  #   list("means" = bind_rows(means_results, .id = "bootstrap"),
+  #        "comparisons" = NULL)
+  # }
+}
+```
+
+
+Use bootstrapping to get the means and CIs for alignment with AI:
+
+```{r aligned_bootstrap}
+set.seed(1)
+bootstrap_df <- bootstrapper(concordance = "Aligned", B = 100)
+
+mean_summary <- bootstrap_df %>%
+  filter(!is.na(prob)) %>%
+  group_by(AIInterface, HumanAI) %>%
+  summarise(
+    mean = mean(prob),
+    # Use bias-corrected confidence intervals
+    ci.lower = bca(prob)[1],
+    ci.upper = bca(prob)[2],
+    .groups = "drop"
+  )
+
+write.csv(mean_summary, "result_data/best_choice_bootstrap_mean_cis.csv")
+mean_summary
+```
+
+# Agreement
+
+```{r agreement}
+print("\n\n####### Analysis of concordance ########\n\n")
+
+AI_labels <- c("Recommended Treatment", "Options to Consider", "Options to Avoid")
+
+concordance_ors <- list()
+concordance_dids <- list()
+concordance_quality_ors <- list()
+
+for (AI_label in AI_labels) {
+  
+  concordance_df <- read.csv(paste("data/advice_quality_", AI_label, "_260409.csv", sep = ""), stringsAsFactors = TRUE)
+
+  concordance_df <- concordance_df %>%
+    mutate(
+      HasAI = as.factor(AIInterface != "No AI"),
+      AdjacentConcordance = as.factor(ConcordanceType == "Adjacent"),
+      MentionConcordance = as.factor(ConcordanceType == "Mentioned"),
+      NoConcordance = as.factor(ConcordanceType == "None"),
+      ConcordanceType = relevel(as.factor(ConcordanceType), ref = "None"),
+    ) %>%
+    dplyr::select(
+      ResponseId, Case, HasAI, SimulatedAIHighQuality,
+      MentionConcordance, AdjacentConcordance, NoConcordance, ConcordanceType, IsBestScore
+    )
+  
+  mention_model <- glmer(MentionConcordance ~ HasAI * SimulatedAIHighQuality + (1 | Case) + (1 | ResponseId),
+                      data = concordance_df,
+                      family = "binomial")
+  mention_base <- glmer(MentionConcordance ~ SimulatedAIHighQuality + (1 | Case) + (1 | ResponseId),
+                         data = concordance_df,
+                         family = "binomial")
+  adj_model <- glmer(AdjacentConcordance ~ HasAI * SimulatedAIHighQuality + (1 | Case) + (1 | ResponseId),
+                         data = concordance_df,
+                         family = "binomial")
+  adj_base <- glmer(AdjacentConcordance ~ SimulatedAIHighQuality + (1 | Case) + (1 | ResponseId),
+                        data = concordance_df,
+                        family = "binomial")
+  none_model <- glmer(NoConcordance ~ HasAI * SimulatedAIHighQuality + (1 | Case) + (1 | ResponseId),
+                     data = concordance_df,
+                     family = "binomial")
+  none_base <- glmer(NoConcordance ~ SimulatedAIHighQuality + (1 | Case) + (1 | ResponseId),
+                    data = concordance_df,
+                    family = "binomial")
+  mention_marg <- glmer(MentionConcordance ~ HasAI + (1 | Case) + (1 | ResponseId),
+                         data = concordance_df,
+                         family = "binomial")
+  adj_marg <- glmer(AdjacentConcordance ~ HasAI + (1 | Case) + (1 | ResponseId),
+                        data = concordance_df,
+                        family = "binomial")
+  none_marg <- glmer(NoConcordance ~ HasAI + (1 | Case) + (1 | ResponseId),
+                    data = concordance_df,
+                    family = "binomial")
+  
+  print(anova(mention_model, mention_base))
+  print(anova(adj_model, adj_base))
+  print(anova(none_model, none_base))
+  ors <- bind_rows(
+    as.data.frame(
+      pairs(emmeans(mention_model, ~ HasAI | SimulatedAIHighQuality, mode = "latent"), 
+            simple = "HasAI", reverse = TRUE, adjust = "none")) 
+    %>% 
+      mutate(ConcordanceType = "Mentioned"), 
+    as.data.frame(
+      pairs(emmeans(mention_marg, ~ HasAI, mode = "latent"), 
+            simple = "HasAI", reverse = TRUE, adjust = "none")) 
+    %>% 
+      mutate(ConcordanceType = "Mentioned", All = TRUE), 
+    as.data.frame(
+      pairs(emmeans(adj_model, ~ HasAI | SimulatedAIHighQuality, mode = "latent"), 
+            simple = "HasAI", reverse = TRUE, adjust = "none")) 
+    %>% 
+      mutate(ConcordanceType = "Adjacent"),
+    as.data.frame(
+      pairs(emmeans(adj_marg, ~ HasAI, mode = "latent"), 
+            simple = "HasAI", reverse = TRUE, adjust = "none")) 
+    %>% 
+      mutate(ConcordanceType = "Adjacent", All = TRUE)
+    # as.data.frame(
+    #   pairs(emmeans(none_model, ~ HasAI | SimulatedAIHighQuality, mode = "latent"), 
+    #         simple = "HasAI", reverse = TRUE, adjust = "none")) 
+    # %>% 
+    #   mutate(ConcordanceType = "None"),
+    # as.data.frame(
+    #   pairs(emmeans(none_marg, ~ HasAI, mode = "latent"), 
+    #         simple = "HasAI", reverse = TRUE, adjust = "none")) 
+    # %>% 
+    #   mutate(ConcordanceType = "None", All = TRUE)
+    )
+  est <- ors[, "estimate"]
+  se  <- ors[, "SE"]
+  ors$odds_ratio  <- exp(est)
+  z <- qnorm(0.975)
+  ors$ci_low <- exp(est - z * se)
+  ors$ci_high <- exp(est + z * se)
+  concordance_ors[[AI_label]] = ors %>% mutate(AIInterface = AI_label)
+  
+  dids <- rbind(
+    as.data.frame(
+      emmeans::contrast(emmeans(mention_model, ~ HasAI * SimulatedAIHighQuality), mode = "latent", interaction = "consec", adjust = "none"))
+    %>% 
+      mutate(ConcordanceType = "Mentioned"), 
+    as.data.frame(
+      emmeans::contrast(emmeans(adj_model, ~ HasAI * SimulatedAIHighQuality), mode = "latent", interaction = "consec", adjust = "none"))
+    %>% 
+      mutate(ConcordanceType = "Adjacent")
+    # as.data.frame(
+    #   emmeans::contrast(emmeans(none_model, ~ HasAI * SimulatedAIHighQuality), mode = "latent", interaction = "consec", adjust = "none")) 
+    # %>% 
+    #   mutate(ConcordanceType = "None")
+  )
+  # est <- dids[, "estimate"]
+  # se  <- dids[, "SE"]
+  # dids$odds_ratio  <- exp(est)
+  # z <- qnorm(0.975)
+  # dids$ci_low <- exp(est - z * se)
+  # dids$ci_high <- exp(est + z * se)
+  
+  concordance_dids[[AI_label]] <- dids %>% mutate(AIInterface = AI_label)
+  
+  AI_only_df <- concordance_df %>% filter(HasAI == TRUE & ConcordanceType != "Mentioned")
+  quality_model <- glmer(IsBestScore ~ ConcordanceType + (1 | Case) + (1 | ResponseId),
+                        data = AI_only_df,
+                        family = binomial)
+  
+  quality_model_simple <- glmer(IsBestScore ~ (1 | Case) + (1 | ResponseId),
+                               data = AI_only_df,
+                               family = binomial)
+  quality_model_bigger <- glmer(IsBestScore ~ ConcordanceType * SimulatedAIHighQuality + (1 | Case) + (1 | ResponseId),
+                               data = AI_only_df,
+                               family = binomial)
+  
+  print(anova(quality_model, quality_model_bigger))
+
+  emm <- emmeans(quality_model_bigger, ~ ConcordanceType | SimulatedAIHighQuality, type = "latent")
+  ctr <- as.data.frame(pairs(emm, simple = "ConcordanceType", combine = TRUE, reverse = TRUE, adjust = "none"))
+  est <- ctr[, "estimate"]
+  se  <- ctr[, "SE"]
+  ctr$odds_ratio  <- exp(est)
+  z <- qnorm(0.975)
+  ctr$ci_low <- exp(est - z * se)
+  ctr$ci_high <- exp(est + z * se)
+  concordance_quality_ors[[AI_label]] <- as.data.frame(ctr) %>% mutate(AIInterface = AI_label)
+}
+concordance_ors_combined <- bind_rows(concordance_ors)
+concordance_ors_combined$p.value.adj <- p.adjust(concordance_ors_combined$p.value, method = "holm")
+concordance_ors_combined <- concordance_ors_combined %>%
+  dplyr::select(AIInterface, ConcordanceType, contrast, SimulatedAIHighQuality, odds_ratio, ci_low, ci_high, p.value.adj)
+print(concordance_ors_combined)
+concordance_dids_combined <- bind_rows(concordance_dids)
+concordance_dids_combined$p.value.adj <- p.adjust(concordance_dids_combined$p.value, method = "holm")
+concordance_dids_combined <- concordance_dids_combined %>% 
+  dplyr::select(AIInterface, ConcordanceType, HasAI_consec, SimulatedAIHighQuality_consec, odds_ratio, ci_low, ci_high, p.value.adj)
+print(concordance_dids_combined)
+concordance_quality_ors_combined <- bind_rows(concordance_quality_ors)
+concordance_quality_ors_combined$p.value.adj <- p.adjust(concordance_quality_ors_combined$p.value, method = "holm")
+concordance_quality_ors_combined <- concordance_quality_ors_combined %>% 
+  dplyr::select(AIInterface, SimulatedAIHighQuality, contrast, odds_ratio, ci_low, ci_high, p.value.adj)
+print(concordance_quality_ors_combined)
+```
+
+```{r write_agreement_outputs}
+write.csv(concordance_ors_combined, "result_data/concordance_ors.csv")
+write.csv(concordance_dids_combined, "result_data/concordance_dids.csv")
+write.csv(concordance_quality_ors_combined, "result_data/concordance_quality_ors.csv")
+```
+
+# Old Stuff
+
+Next, look at each concordance type and get the mean and CI of the quality scores. Also pairwise statistically compare the 95% CIs within each AI interface:
+
+```{r bootstrap_compare, warning = FALSE, message = FALSE}
+alignments <- c("Mentioned", "Adjacent", "None")
+
+simulated_qualities <- list()
+
+for (alignment in alignments) {
+  print(alignment)
+  
+  bootstrap_df <- bind_rows(
+    bootstrapper(concordance = alignment, B = 50, uniform = TRUE, quality_cases = "low") %>% mutate(Uniform = TRUE),
+    bootstrapper(concordance = alignment, B = 50, uniform = FALSE, quality_cases = "low") %>% mutate(Uniform = FALSE)
+  )
+  simulated_qualities[[alignment]] <- bootstrap_df
+  write.csv(bootstrap_df, paste("result_data/simulated_decisions_", alignment, ".csv", sep = ""))
+}
+
+for (ai_interface in c("Recommended Treatment", "Options to Consider", "Options to Avoid")) {
+  estimates <- bind_rows(
+    simulated_qualities[["Mentioned"]] %>% mutate(ConcordanceType = "Mentioned") %>% filter(AIInterface == ai_interface),
+    simulated_qualities[["Adjacent"]] %>% mutate(ConcordanceType = "Adjacent") %>% filter(AIInterface == ai_interface),
+    simulated_qualities[["None"]] %>% mutate(ConcordanceType = "None") %>% filter(AIInterface == ai_interface)
+  )
+  print(ggplot(estimates, aes(x = prob, fill = ConcordanceType)) +
+      geom_histogram() + 
+      facet_grid(Uniform ~ ., scales = "free_y") +
+      labs(title = ai_interface))
+
+}
+```
+
+
+```{r bootstrap_analyze}
+# Compute the alpha for which the bootstrap CI is 0 - estimates p-value based on CIs
+compute_p <- function (stats) {
+  alpha <- c(
+    seq(0.00000001, 0.00000009, 0.00000001),
+    seq(0.0000001, 0.0000009, 0.0000001),
+    seq(0.000001, 0.000009, 0.000001),
+    seq(0.00001, 0.00009, 0.00001),
+    seq(0.0001, 0.0009, 0.0001),
+    seq(0.001, 0.009, 0.001),
+    seq(0.01, 0.099, 0.001),
+    seq(0.1, 0.5, 0.01)
+  )
+  
+  bca.out <- sapply(alpha, function (a) {
+    bca(stats, conf.level = 1 - a)
+  })
+
+  # bca.out
+  ## lower-tailed test of theta = 0
+  ltpv <- approx(bca.out[1,],
+      alpha, xout = 1, rule = 2)$y
+  
+  utpv <- approx(bca.out[2,], alpha, xout = 1, rule = 2)$y
+
+  print(bca.out[1,])
+  print(alpha)
+  print(bca.out[2,])
+  ## two-tailed test of theta = 0
+  2 * min(ltpv, utpv)
+}
+
+concordance_quality_summary <- c()
+concordance_comparisons <- c()
+for (concordance_type in c("Mentioned", "Adjacent", "None")) {
+  mean_summary <- simulated_qualities[[concordance_type]] %>%
+    filter(!is.na(prob)) %>%
+    group_by(AIInterface) %>%
+    summarise(
+      mean = mean(prob),
+      ci.lower = bca(prob)[1],
+      ci.upper = bca(prob)[2],
+      .groups = "drop"
+    )
+  append(concordance_quality_summary, mean_summary)
+  comparison_summary <- simulated_comparisons[[concordance_type]] %>%
+    group_by(AIInterface) %>%
+    summarise(
+      mean = mean(prob),
+      ci.lower = bca(prob)[1],
+      ci.upper = bca(prob)[2],
+      .groups = "drop"
+    )
+}
+
+
+contrast_summary$p.value.adj <- p.adjust(contrast_summary$p.value, method = "holm")
+
+mean_summary
+contrast_summary
+```
+
+```{r}
+write.csv(mean_summary, "result_data/best_choice_bootstrap_mean_cis.csv")
+write.csv(contrast_summary, "result_data/best_choice_bootstrap_ors.csv")
+```
+
+```{r expected_quality}
+sim_data <- expand_grid(
+  ResponseId = seq(1, 1000),
+  AIInterface = c("No AI", "Recommended Treatment", "Options to Consider", "Options to Avoid"),
+  Case = cases
+) %>%
+  mutate(
+    Decision = map2_chr(
+      Case,
+      AIInterface,
+      ~ sample_decision(.x, .y)
+    ),
+    HumanAI = "Simulated"
+  )
+
+sim_data <- sim_data %>%
+  left_join(quality %>% mutate(Decision = as.character(Decision)), by = c("Case", "Decision")) %>%
+  group_by(AIInterface, Case) %>%
+  summarise(ExpectedQuality = mean(QualityScore), .groups = "drop")
+
+no_ai_quality <- sim_data %>% filter(AIInterface == "No AI") %>% rename(NoAIQuality = ExpectedQuality) %>% dplyr::select(-AIInterface)
+quality_baseline <- sim_data %>%
+  left_join(no_ai_quality, by = "Case") %>%
+  mutate(RelativeExpectedQuality = ExpectedQuality - NoAIQuality)
+quality_baseline
+```

@@ -1,0 +1,4 @@
+"","AIInterface","contrast","mean","ci.lower","ci.upper","p.value","p.value.adj"
+"1","Recommended Treatment","Human / Simulated",4.73294790733512,3.04819099494833,7.69978226830728,2e-08,6e-08
+"2","Options to Consider","Human / Simulated",3.30791376042604,2.35474971037195,4.54278360835218,2e-08,6e-08
+"3","Options to Avoid","Human / Simulated",0.881989628581378,0.630753492882657,1.12920918325883,0.500631550772118,0.500631550772118
