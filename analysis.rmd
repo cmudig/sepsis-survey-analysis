@@ -1,7 +1,7 @@
 ---
-title: "260408_best_choice_analysis"
+title: "Analysis of Optimal Treatment Rates"
 output: html_document
-date: "2026-04-09"
+date: "2026-10-08"
 ---
 
 ```{r setup, include=FALSE}
@@ -21,17 +21,19 @@ if (!("coxed" %in% installed.packages()[, "Package"])) install.packages("./coxed
 library(coxed)
 
 set.seed(1)
+
+analysis_date <- "261008"
 ```
 
 ## Loading Data
 
 ```{r load_data, include=FALSE}
-decisions <- read_csv("data/decisions_with_relative_quality_260411.csv") %>% 
+decisions <- read_csv(paste0("data/decisions_with_relative_quality_", analysis_date, ".csv"))%>% 
   mutate(Decision = decision_num,
          Case = as.factor(Case),
          ResponseId = as.factor(ResponseId)) %>%
-  dplyr::select(ResponseId, AIInterface, Case, Decision, QualityScore, MaxQuality, IsBestScore, RelativeQuality)
-responses <- read_csv("data/cleaned_respondent_level_260408.csv")
+  dplyr::select(ResponseId, AIInterface, Case, Decision, QualityScore, MinQuality, MaxQuality, RelativeQuality, IsBestScore)
+responses <- read_csv(paste0("data/cleaned_respondent_level_", analysis_date, ".csv"))
 quality <- read_csv("data/all_quality_ratings.csv") %>% 
   mutate(QualityScore = Final) %>%
   dplyr::select(-E1, -E2, -E3, -E4, -E5, -Final)
@@ -211,7 +213,7 @@ print("Emmeans:")
 
 emm <- emmeans(model, ~ AIInterface)
 
-ctr <- emmeans::contrast(emm, method = "pairwise", adjust = "tukey")
+ctr <- emmeans::contrast(emm, method = "revpairwise", adjust = "tukey")
 ctr_df <- as.data.frame(ctr)
 ctr_df$OR <- exp(ctr_df$estimate)
 ctr_df$lower.OR <- exp(ctr_df$estimate - 1.96 * ctr_df$SE)
@@ -221,7 +223,7 @@ ctr_df$upper.OR <- exp(ctr_df$estimate + 1.96 * ctr_df$SE)
 ctr_df <- ctr_df[, c("contrast", "estimate", "SE", "OR", "lower.OR", "upper.OR", "z.ratio", "p.value")]
 print(ctr_df)
 
-write.csv(ctr_df, "result_data/human_best_choice_ors.csv")
+write.csv(ctr_df, "result_data/human_best_choice_ors_fixed_threshold.csv")
 ```
 
 Run a model controlling for the expected quality of following the AI:
@@ -248,7 +250,7 @@ ctr_df$upper.OR <- exp(ctr_df$estimate + 1.96 * ctr_df$SE)
 ctr_df <- ctr_df[, c("contrast", "estimate", "SE", "OR", "lower.OR", "upper.OR", "z.ratio", "p.value")]
 print(ctr_df)
 
-write.csv(ctr_df, "result_data/human_best_choice_ors_quality_control.csv")
+write.csv(ctr_df, "result_data/human_best_choice_ors_quality_control_fixed_threshold.csv")
 ```
 
 ## Run Bootstrap
@@ -279,7 +281,7 @@ bootstrapper <- function (concordance = "Aligned", B = 1000, uniform = FALSE, qu
     # -----------------------------
   
     boot_responses <- tibble(ResponseId = boot_ids) %>%
-      left_join(decisions %>% dplyr::select(ResponseId, AIInterface, Case, RelativeQuality), by = "ResponseId") %>%
+      left_join(decisions %>% dplyr::select(ResponseId, AIInterface, Case, RelativeQuality), by = "ResponseId", relationship = "many-to-many") %>%
       mutate(ResponseId = paste0(ResponseId, "_boot", row_number())) %>%
       dplyr::select(ResponseId, AIInterface, Case, RelativeQuality)
     
@@ -377,7 +379,7 @@ Use bootstrapping to get the means and CIs for alignment with AI:
 
 ```{r aligned_bootstrap}
 set.seed(1)
-bootstrap_df <- bootstrapper(concordance = "Aligned", B = 100)
+bootstrap_df <- bootstrapper(concordance = "Aligned", B = 1000)
 
 mean_summary <- bootstrap_df %>%
   filter(!is.na(prob)) %>%
@@ -394,6 +396,10 @@ write.csv(mean_summary, "result_data/best_choice_bootstrap_mean_cis.csv")
 mean_summary
 ```
 
+```{r}
+write.csv(mean_summary, "result_data/best_choice_bootstrap_mean_cis.csv")
+mean_summary
+```
 # Agreement
 
 ```{r agreement}
@@ -507,12 +513,12 @@ for (AI_label in AI_labels) {
     # %>% 
     #   mutate(ConcordanceType = "None")
   )
-  # est <- dids[, "estimate"]
-  # se  <- dids[, "SE"]
-  # dids$odds_ratio  <- exp(est)
-  # z <- qnorm(0.975)
-  # dids$ci_low <- exp(est - z * se)
-  # dids$ci_high <- exp(est + z * se)
+  est <- dids[, "estimate"]
+  se  <- dids[, "SE"]
+  dids$odds_ratio  <- exp(est)
+  z <- qnorm(0.975)
+  dids$ci_low <- exp(est - z * se)
+  dids$ci_high <- exp(est + z * se)
   
   concordance_dids[[AI_label]] <- dids %>% mutate(AIInterface = AI_label)
   
@@ -561,133 +567,4 @@ print(concordance_quality_ors_combined)
 write.csv(concordance_ors_combined, "result_data/concordance_ors.csv")
 write.csv(concordance_dids_combined, "result_data/concordance_dids.csv")
 write.csv(concordance_quality_ors_combined, "result_data/concordance_quality_ors.csv")
-```
-
-# Old Stuff
-
-Next, look at each concordance type and get the mean and CI of the quality scores. Also pairwise statistically compare the 95% CIs within each AI interface:
-
-```{r bootstrap_compare, warning = FALSE, message = FALSE}
-alignments <- c("Mentioned", "Adjacent", "None")
-
-simulated_qualities <- list()
-
-for (alignment in alignments) {
-  print(alignment)
-  
-  bootstrap_df <- bind_rows(
-    bootstrapper(concordance = alignment, B = 50, uniform = TRUE, quality_cases = "low") %>% mutate(Uniform = TRUE),
-    bootstrapper(concordance = alignment, B = 50, uniform = FALSE, quality_cases = "low") %>% mutate(Uniform = FALSE)
-  )
-  simulated_qualities[[alignment]] <- bootstrap_df
-  write.csv(bootstrap_df, paste("result_data/simulated_decisions_", alignment, ".csv", sep = ""))
-}
-
-for (ai_interface in c("Recommended Treatment", "Options to Consider", "Options to Avoid")) {
-  estimates <- bind_rows(
-    simulated_qualities[["Mentioned"]] %>% mutate(ConcordanceType = "Mentioned") %>% filter(AIInterface == ai_interface),
-    simulated_qualities[["Adjacent"]] %>% mutate(ConcordanceType = "Adjacent") %>% filter(AIInterface == ai_interface),
-    simulated_qualities[["None"]] %>% mutate(ConcordanceType = "None") %>% filter(AIInterface == ai_interface)
-  )
-  print(ggplot(estimates, aes(x = prob, fill = ConcordanceType)) +
-      geom_histogram() + 
-      facet_grid(Uniform ~ ., scales = "free_y") +
-      labs(title = ai_interface))
-
-}
-```
-
-
-```{r bootstrap_analyze}
-# Compute the alpha for which the bootstrap CI is 0 - estimates p-value based on CIs
-compute_p <- function (stats) {
-  alpha <- c(
-    seq(0.00000001, 0.00000009, 0.00000001),
-    seq(0.0000001, 0.0000009, 0.0000001),
-    seq(0.000001, 0.000009, 0.000001),
-    seq(0.00001, 0.00009, 0.00001),
-    seq(0.0001, 0.0009, 0.0001),
-    seq(0.001, 0.009, 0.001),
-    seq(0.01, 0.099, 0.001),
-    seq(0.1, 0.5, 0.01)
-  )
-  
-  bca.out <- sapply(alpha, function (a) {
-    bca(stats, conf.level = 1 - a)
-  })
-
-  # bca.out
-  ## lower-tailed test of theta = 0
-  ltpv <- approx(bca.out[1,],
-      alpha, xout = 1, rule = 2)$y
-  
-  utpv <- approx(bca.out[2,], alpha, xout = 1, rule = 2)$y
-
-  print(bca.out[1,])
-  print(alpha)
-  print(bca.out[2,])
-  ## two-tailed test of theta = 0
-  2 * min(ltpv, utpv)
-}
-
-concordance_quality_summary <- c()
-concordance_comparisons <- c()
-for (concordance_type in c("Mentioned", "Adjacent", "None")) {
-  mean_summary <- simulated_qualities[[concordance_type]] %>%
-    filter(!is.na(prob)) %>%
-    group_by(AIInterface) %>%
-    summarise(
-      mean = mean(prob),
-      ci.lower = bca(prob)[1],
-      ci.upper = bca(prob)[2],
-      .groups = "drop"
-    )
-  append(concordance_quality_summary, mean_summary)
-  comparison_summary <- simulated_comparisons[[concordance_type]] %>%
-    group_by(AIInterface) %>%
-    summarise(
-      mean = mean(prob),
-      ci.lower = bca(prob)[1],
-      ci.upper = bca(prob)[2],
-      .groups = "drop"
-    )
-}
-
-
-contrast_summary$p.value.adj <- p.adjust(contrast_summary$p.value, method = "holm")
-
-mean_summary
-contrast_summary
-```
-
-```{r}
-write.csv(mean_summary, "result_data/best_choice_bootstrap_mean_cis.csv")
-write.csv(contrast_summary, "result_data/best_choice_bootstrap_ors.csv")
-```
-
-```{r expected_quality}
-sim_data <- expand_grid(
-  ResponseId = seq(1, 1000),
-  AIInterface = c("No AI", "Recommended Treatment", "Options to Consider", "Options to Avoid"),
-  Case = cases
-) %>%
-  mutate(
-    Decision = map2_chr(
-      Case,
-      AIInterface,
-      ~ sample_decision(.x, .y)
-    ),
-    HumanAI = "Simulated"
-  )
-
-sim_data <- sim_data %>%
-  left_join(quality %>% mutate(Decision = as.character(Decision)), by = c("Case", "Decision")) %>%
-  group_by(AIInterface, Case) %>%
-  summarise(ExpectedQuality = mean(QualityScore), .groups = "drop")
-
-no_ai_quality <- sim_data %>% filter(AIInterface == "No AI") %>% rename(NoAIQuality = ExpectedQuality) %>% dplyr::select(-AIInterface)
-quality_baseline <- sim_data %>%
-  left_join(no_ai_quality, by = "Case") %>%
-  mutate(RelativeExpectedQuality = ExpectedQuality - NoAIQuality)
-quality_baseline
 ```
